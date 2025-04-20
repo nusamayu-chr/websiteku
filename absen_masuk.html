@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Absensi RFID - Masuk & Pulang</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: rgba(255,255,255,0.1);
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+    input[type=\"text\"] {
+      width: 80%;
+      padding: 12px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    button {
+      width: 40%;
+      padding: 10px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffffff;
+      color: #007bff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #e0e0e0;
+    }
+    .status {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #ffeb3b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Absensi Menggunakan RFID</h2>
+    <p>Tempelkan kartu RFID Anda</p>
+    <input type="text" id="rfid" placeholder="Scan RFID di sini" autofocus />
+    <div>
+      <button onclick="absen('masuk')">Absen Masuk</button>
+      <button onclick="absen('pulang')">Absen Pulang</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    function absen(tipe) {
+      const rfid = document.getElementById('rfid').value;
+      const waktu = new Date().toLocaleTimeString();
+      if (rfid === '') {
+        document.getElementById('status').textContent = 'Silakan scan RFID terlebih dahulu.';
+        return;
+      }
+      const statusText = tipe === 'masuk' 
+        ? `Absen Masuk (${rfid}) berhasil pada ${waktu}` 
+        : `Absen Pulang (${rfid}) berhasil pada ${waktu}`;
+      document.getElementById('status').textContent = statusText;
+
+      // Reset field setelah absen
+      document.getElementById('rfid').value = '';
+    }
+  </script>
+</body>
+</html>

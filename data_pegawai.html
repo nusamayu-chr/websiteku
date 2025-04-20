@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Pegawai - Absensi Pegawai</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #2196F3, #21CBF3);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+    h2 {
+      margin-bottom: 30px;
+    }
+    table {
+      width: 80%;
+      max-width: 900px;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      margin: 10px 0;
+      border-radius: 10px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      border-collapse: collapse;
+    }
+    table th, table td {
+      padding: 15px;
+      text-align: center;
+      border: 1px solid #fff;
+    }
+    table th {
+      background-color: #007bff;
+    }
+    table tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .foto-pegawai {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    form {
+      width: 60%;
+      max-width: 800px;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+    label {
+      font-size: 18px;
+      color: #fff;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    input[type="text"], input[type="file"] {
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>Data Pegawai</h2>
+
+  <!-- Tabel Data Pegawai -->
+  <table id="data-pegawai-table">
+    <thead>
+      <tr>
+        <th>Foto</th>
+        <th>Nama</th>
+        <th>NIP/NIK</th>
+        <th>Jabatan</th>
+      </tr>
+    </thead>
+    <tbody id="pegawai-list">
+      <!-- Data Pegawai akan ditambahkan di sini -->
+    </tbody>
+  </table>
+
+  <!-- Form Tambah Pegawai -->
+  <h2>Tambah Pegawai</h2>
+  <form id="form-tambah-pegawai">
+    <label for="nama">Nama:</label>
+    <input type="text" id="nama" name="nama" required placeholder="Masukkan Nama Pegawai">
+
+    <label for="nip">NIP/NIK:</label>
+    <input type="text" id="nip" name="nip" required placeholder="Masukkan NIP atau NIK Pegawai">
+
+    <label for="jabatan">Jabatan:</label>
+    <input type="text" id="jabatan" name="jabatan" required placeholder="Masukkan Jabatan Pegawai">
+
+    <label for="foto">Foto:</label>
+    <input type="file" id="foto" name="foto" accept="image/*">
+
+    <button type="submit">Simpan Data Pegawai</button>
+  </form>
+
+  <script>
+    // Menampilkan data pegawai dari localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const pegawaiList = document.getElementById('pegawai-list');
+      const dataPegawai = JSON.parse(localStorage.getItem('dataPegawai')) || [];
+
+      dataPegawai.forEach(function(pegawai) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><img src="${pegawai.foto || 'default.jpg'}" class="foto-pegawai" /></td>
+          <td>${pegawai.nama}</td>
+          <td>${pegawai.nip}</td>
+          <td>${pegawai.jabatan}</td>
+        `;
+        pegawaiList.appendChild(tr);
+      });
+    });
+
+    // Menyimpan data pegawai ke localStorage
+    document.getElementById('form-tambah-pegawai').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const nama = document.getElementById('nama').value;
+      const nip = document.getElementById('nip').value;
+      const jabatan = document.getElementById('jabatan').value;
+      const foto = document.getElementById('foto').files[0];
+
+      const pegawaiBaru = {
+        nama: nama,
+        nip: nip,
+        jabatan: jabatan,
+        foto: foto ? URL.createObjectURL(foto) : null
+      };
+
+      // Menyimpan data pegawai ke localStorage
+      let dataPegawai = JSON.parse(localStorage.getItem('dataPegawai')) || [];
+      dataPegawai.push(pegawaiBaru);
+      localStorage.setItem('dataPegawai', JSON.stringify(dataPegawai));
+
+      // Menambahkan pegawai baru ke tabel
+      const pegawaiList = document.getElementById('pegawai-list');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><img src="${pegawaiBaru.foto || 'default.jpg'}" class="foto-pegawai" /></td>
+        <td>${pegawaiBaru.nama}</td>
+        <td>${pegawaiBaru.nip}</td>
+        <td>${pegawaiBaru.jabatan}</td>
+      `;
+      pegawaiList.appendChild(tr);
+
+      // Reset form input
+      document.getElementById('form-tambah-pegawai').reset();
+      alert('Data Pegawai Disimpan!');
+    });
+  </script>
+</body>
+</html>

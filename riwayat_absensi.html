@@ -1,0 +1,89 @@
+<?php
+include('db.php');
+
+// Ambil data riwayat absensi
+$sql = "SELECT * FROM absensi";
+$result = $conn->query($sql);
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riwayat Absensi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .download-btn {
+            display: block;
+            width: 150px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            margin: 20px auto;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Riwayat Absensi Pegawai</h2>
+    
+    <!-- Tabel Riwayat Absensi -->
+    <table>
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>NIP/NIK</th>
+                <th>Absen Masuk</th>
+                <th>Absen Pulang</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while($row = $result->fetch_assoc()) { ?>
+            <tr>
+                <td><?php echo $row['nama']; ?></td>
+                <td><?php echo $row['nip']; ?></td>
+                <td><?php echo $row['absen_masuk']; ?></td>
+                <td><?php echo $row['absen_pulang']; ?></td>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+    
+    <!-- Tombol Download PDF -->
+    <a href="generate_pdf.php" class="download-btn">Download PDF</a>
+
+</body>
+</html>
+
+<?php
+$conn->close();
+?>
